@@ -18,3 +18,28 @@ A good strategy to take into account while developing the program is the next:
 - Identify parts of solutions in the same program that could be reused in many places.
 3. Build a prototype first and foremost. Don't start with a full-scale solution. It's best to start with a program that solves a key part of the solution that goes through the stages of development. This will not be built upon, but parts may be reused for the last part of the strategy.
 4. Build a full-scale solution using initial version's parts and prototypes so that it can be gradually built upon.
+
+### Back to the calculator
+This calculator will be in the console, so we could say that the program, from the user's perspective, might look like:
+```
+{
+Expression: 2+2
+Result: 4
+Expression: 2+2*3
+Result: 8
+Expression 2+3-25/5
+Result: 0
+}
+```
+
+Now, how could we achieve that? First thing that comes to mind is a logic akin to this:
+
+```
+{
+    input
+    compute
+    output
+}
+```
+This is called pseudocode, because we don't really know what things are yet, but it's sort of code.
+As a first attempt, we could do something like [this](5_WriteAProgram/1_FirstAttempt.cpp).
