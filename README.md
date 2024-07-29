@@ -42,4 +42,78 @@ Now, how could we achieve that? First thing that comes to mind is a logic akin t
 }
 ```
 This is called pseudocode, because we don't really know what things are yet, but it's sort of code.
-As a first attempt, we could do something like [this](5_WriteAProgram/1_FirstAttempt.cpp).
+As a first attempt, we could do something like [the first version of this](5_WriteAProgram/1_FirstAttempt.cpp). There are flaws in this, like using if statements instead of switches, only supports one operand, only supports the '+' and '-' operands...
+The [second version of the same file](5_WriteAProgram/1_FirstAttempt.cpp) fixes those issues, but it does not respect the order of operations, because it does them as they're read.
+
+We need to look ahead of the operation before computing the answer. To do this, we need to tokenize. 
+
+A token is a series of characters that represent a unit. In this calculator we need:
+- Floating-point literals (e.g. 3.14159..., 4.5, 3.3333..., 20)
+- Operators (+, -, *, /, %)
+- Parentheses
+
+We tokenize by representing is as a (kind, value) pair, where "kind" is what kind of token it is (floating-point literal, what operator it is, or parentheses), and value is its numeric value (only applicable to numbers). For this, we need to define tokens in C++.
+
+How can we define it? Well, we need a way to store operators and numeric values, so something like this:
+|| Token |      
+|-------|-------|
+| Kind | plus |
+| Value ||
+
+|| Token |      
+|-------|-------|
+| Kind | number |
+| Value | 3.14 |
+
+Knowing this, the simplest way to define this type is like so:
+```cpp
+{
+
+    class Token                     // a very simple user-defined type
+    {              
+    public:
+         char kind;
+         double value;
+    };
+    
+}
+```
+This fulfills the criteria we need for the token:
+- [x] Stores operators. `kind` is of type `char`, which can store the operators that we need, plus what kind of token it is.
+- [x] Stores numeric values. `value` is of type `double`, which can store the numbers we need.
+
+Now we can freely create tokens like so:
+```cpp
+{
+
+    Token t;                       // t is a Token
+    t.kind = '+';                  // t represents a +
+    Token t2;                      // t2 is another Token
+    t2.kind = '8';                 // we use the digit 8 as the “kind” for numbers
+    t2.value = 3.14;
+
+}
+```
+
+We can now set how we want the implementation to sort of look like:
+| '(' | '8' | '+' | '8' | ')' | '*' | '8' |
+|-----|-----|-----|-----|-----|-----|-----|
+|     | 1.5 |     |  4  |     |     |  11 |
+
+`Token` is a user-defined type. It can have member functions and data members.
+```cpp
+{
+    
+    class Token
+    {
+    public:
+         char kind;                                             // what kind of token
+         double value;                                          // for numbers: a value
+         Token(char k) :kind{k}, value{0.0}{}                   // construct from one value
+         Token(char k, double v) :kind{k}, value{v}{}           // construct from two values
+    };
+
+}
+```
+
+`Token(char k) :kind{k}, value{0.0}{}` and `Token(char k, double v) :kind{k}, value{v}{}` are functions to help us initialize variables with the type `Token`.
